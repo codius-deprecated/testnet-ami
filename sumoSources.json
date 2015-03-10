@@ -1,0 +1,52 @@
+{
+"api.version":"v1",
+"sources": [
+  {
+    "name": "rippled_testnet_{{inventory_hostname}}",
+    "category": "testnet/rippled",
+    "hostName": "{{inventory_hostname}}",
+    "automaticDateParsing": true,
+    "multilineProcessingEnabled": true,
+    "useAutolineMatching": true,
+    "forceTimeZone": false,
+    "filters": [],
+    "encoding": "UTF-8",
+    "blacklist": [],
+    "sourceType": "LocalFile",
+    "pathExpression": "/srv/rippled/rippled.log",
+    "alive": true
+  },
+  {
+    "name": "rippled_testnet_{{inventory_hostname}}_boot",
+    "category": "testnet/boot",
+    "hostName": "{{inventory_hostname}}",
+    "automaticDateParsing": true,
+    "multilineProcessingEnabled": true,
+    "useAutolineMatching": true,
+    "forceTimeZone": false,
+    "filters": [],
+    "encoding": "UTF-8",
+    "sourceType": "LocalFile",
+    "blacklist": [],
+    "pathExpression": "/var/log/testnet_boot.log",
+    "alive": true
+  },
+  {
+    "name": "rippled_testnet_{{inventory_hostname}}_server_info",
+    "category": "testnet/rippled/server_info",
+    "hostName": "{{inventory_hostname}}",
+    "automaticDateParsing": true,
+    "multilineProcessingEnabled": true,
+    "commands": ["/usr/bin/docker", "run", "ripple/rippled:latest", "--conf", "/srv/rippled/data/rippled.cfg", "server_info"],
+    "useAutolineMatching": false,
+    "cronExpression": "0 * * * * * *",
+    "forceTimeZone": false,
+    "filters": [],
+    "encoding": "UTF-8",
+    "sourceType": "Script",
+    "blacklist": [],
+    "alive": true
+  }
+]
+}
+

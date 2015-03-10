@@ -3,6 +3,8 @@
   connection: local
   sudo: yes
   hosts: 127.0.0.1
+  vars_files:
+    - sumo-config.yml
   tasks:
     - name: Enable docker 1.17 ppa
       apt_repository: repo='deb https://get.docker.io/ubuntu docker main' state=present
@@ -14,6 +16,8 @@
       apt: name=lxc-docker state=latest
     - name: Install easy_install
       apt: name=python-setuptools state=latest
+    - name: Install java
+      apt: name=openjdk-7-jre state=latest
     - name: Update pip
       command: easy_install -U pip
     - name: Install docker-py
@@ -24,5 +28,11 @@
       copy: src=testnet-boot.yml dest=/root/testnet-boot.yml
     - name: Run testnet-boot.sh at boot
       copy: src=testnet-boot.sh dest=/etc/rc.local owner=root mode=0755
+    - name: Install sumologic deb
+      apt: deb=sumocollector_19.deb state=present
+    - name: Configure sumologic
+      template: src=sumo.conf dest=/etc/sumo.conf
+    - name: Configure sumo sources
+      template: src=sumoSources.json dest=/etc/sumoSources.json
     - name: Install default rippled.cfg
       copy: src=rippled.cfg dest=/root/rippled.cfg
