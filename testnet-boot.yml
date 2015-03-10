@@ -1,0 +1,14 @@
+---
+- name: Boot script for rippled testnet AMI
+  hosts: 127.0.0.1
+  connection: local
+  sudo: yes
+  vars:
+    rippled_version: latest
+  vars_files:
+    - testnet-config.yml
+  tasks:
+    - name: Pull rippled image for {{rippled_version}}
+      command: docker pull ripple/rippled:{{rippled_version}}
+    - name: Start rippled
+      docker: ports=51235:51235/udp,5005:5005 name=rippled state=running volumes=/srv/rippled:/srv/rippled/data image=ripple/rippled:{{rippled_version}}

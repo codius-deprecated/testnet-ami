@@ -1,0 +1,26 @@
+---
+- name: Rippled dockerized server
+  connection: local
+  sudo: yes
+  hosts: 127.0.0.1
+  tasks:
+    - name: Enable docker 1.17 ppa
+      apt_repository: repo='deb https://get.docker.io/ubuntu docker main' state=present
+    - name: Install docker apt key
+      apt_key: keyserver=keyserver.ubuntu.com id=36A1D7869245C8950F966E92D8576A8BA88D21E9
+    - name: Update apt
+      apt: update_cache=yes
+    - name: Install docker
+      apt: name=lxc-docker state=latest
+    - name: Install easy_install
+      apt: name=python-setuptools state=latest
+    - name: Update pip
+      command: easy_install -U pip
+    - name: Install docker-py
+      pip: name=docker-py state=latest
+    - name: Create rippled storage
+      file: name=/srv/rippled/ state=directory
+    - name: Install testnet-boot.yml
+      copy: src=testnet-boot.yml dest=/root/testnet-boot.yml
+    - name: Run testnet-boot.sh at boot
+      copy: src=testnet-boot.sh dest=/etc/rc.local owner=root mode=0755
