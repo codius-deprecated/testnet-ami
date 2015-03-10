@@ -23,7 +23,10 @@
     - name: Install docker-py
       pip: name=docker-py state=latest
     - name: Create rippled storage
-      file: name=/srv/rippled/ state=directory
+      file: name={{item}} state=directory
+      with_items:
+        - /srv/rippled/
+        - /srv/rippled/db/
     - name: Install testnet-boot.yml
       copy: src=testnet-boot.yml dest=/root/testnet-boot.yml
     - name: Run testnet-boot.sh at boot
