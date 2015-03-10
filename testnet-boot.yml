@@ -10,5 +10,7 @@
   tasks:
     - name: Pull rippled image for {{rippled_version}}
       command: docker pull ripple/rippled:{{rippled_version}}
+    - name: Install rippled configuration
+      template: src=rippled.cfg dest=/srv/rippled/rippled.cfg
     - name: Start rippled
       docker: ports=51235:51235/udp,5005:5005 name=rippled state=running volumes=/srv/rippled:/srv/rippled/data image=ripple/rippled:{{rippled_version}}

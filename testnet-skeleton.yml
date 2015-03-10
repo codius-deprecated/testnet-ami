@@ -24,3 +24,5 @@
       copy: src=testnet-boot.yml dest=/root/testnet-boot.yml
     - name: Run testnet-boot.sh at boot
       copy: src=testnet-boot.sh dest=/etc/rc.local owner=root mode=0755
+    - name: Install default rippled.cfg
+      copy: src=rippled.cfg dest=/root/rippled.cfg
