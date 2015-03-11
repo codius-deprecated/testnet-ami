@@ -4,8 +4,9 @@
   sudo: yes
   hosts: 127.0.0.1
   vars_files:
-    - sumo-config.yml
+    - vars/sumo-config.yml
   tasks:
+    # Dependencies
     - name: Enable docker 1.17 ppa
       apt_repository: repo='deb https://get.docker.io/ubuntu docker main' state=present
     - name: Install docker apt key
@@ -22,20 +23,28 @@
       command: easy_install -U pip
     - name: Install docker-py
       pip: name=docker-py state=latest
+
+    # Rippled init
     - name: Create rippled storage
       file: name={{item}} state=directory
       with_items:
         - /srv/rippled/
         - /srv/rippled/db/
-    - name: Install testnet-boot.yml
-      copy: src=testnet-boot.yml dest=/root/testnet-boot.yml
-    - name: Run testnet-boot.sh at boot
-      copy: src=testnet-boot.sh dest=/etc/rc.local owner=root mode=0755
+
+    # Boot configuration
+    - name: Install 03-ami-boot directory
+      copy: src=03-ami-boot/ dest=/srv/ami-boot
+    - name: Configure ansible on AMI
+      template: src=01-ami-templates/ansible.cfg dest=/etc/ansible/ansible.cfg
+    - name: Run 02-ami-rc-local.yml at boot
+      copy: src=02-ami-rc-local.yml dest=/etc/rc.local owner=root mode=0755
+
+    # Logging configuration
+    - name: Download sumologic deb
+      get_url: dest=/tmp/sumocollector.deb url=https://collectors.sumologic.com/rest/download/deb/64
     - name: Install sumologic deb
-      apt: deb=sumocollector_19.deb state=present
+      apt: deb=/tmp/sumocollector.deb state=present
     - name: Configure sumologic
-      template: src=sumo.conf dest=/etc/sumo.conf
+      template: src=01-ami-templates/sumo.conf dest=/etc/sumo.conf
     - name: Configure sumo sources
-      template: src=sumoSources.json dest=/etc/sumoSources.json
-    - name: Install default rippled.cfg
-      copy: src=rippled.cfg dest=/root/rippled.cfg
+      template: src=01-ami-templates/sumoSources.json dest=/etc/sumoSources.json

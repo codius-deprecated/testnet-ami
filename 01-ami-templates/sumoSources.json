@@ -1,0 +1,25 @@
+{
+"api.version":"v1",
+"sources": [
+  {
+    "name": "rippled",
+    "category": "testnet/rippled",
+    "sourceType": "LocalFile",
+    "pathExpression": "/srv/rippled/rippled.log"
+  },
+  {
+    "name": "ansible",
+    "category": "testnet/ansible",
+    "sourceType": "LocalFile",
+    "pathExpression": "/var/log/ansible.log"
+  },
+  {
+    "name": "rippled server_info",
+    "category": "testnet/rippled/server_info",
+    "commands": ["/usr/bin/docker", "run", "--rm=true", "ripple/rippled:latest", "--conf", "/srv/rippled/data/rippled.cfg", "server_info"],
+    "cronExpression": "0 * * * * * *",
+    "sourceType": "Script"
+  }
+]
+}
+

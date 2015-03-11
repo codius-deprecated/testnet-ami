@@ -1,0 +1,13 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Download configuration for rippled testnet AMI
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+    - name: Create blank configuration
+      command: touch /srv/ami-boot/testnet-config.yml
+    - name: Download configuration
+      get_url: dest=/srv/ami-boot/testnet-config.yml url=http://169.254.169.254/latest/user-data force=yes
+      ignore_errors: yes
+    - name: Run boot playbook
+      command: ansible-playbook /srv/ami-boot/main.yml

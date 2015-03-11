@@ -25,7 +25,7 @@
   },
   {
     "type": "ansible-local",
-    "playbook_file": "testnet-skeleton.yml",
+    "playbook_file": "01-configure-base-ami.yml",
     "playbook_dir": "."
   }]
 }
