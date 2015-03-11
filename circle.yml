@@ -12,9 +12,9 @@ dependencies:
     - mkdir ~/packer && unzip ~/packer.zip -d ~/packer
 test:
   override:
-    - ~/packer/packer validate rippled.json
+    - ~/packer/packer validate 00-packer.json
 deployment:
   packer:
     branch: master
     commands:
-      - ~/packer/packer build rippled.json
+      - ~/packer/packer build 00-packer.json
