@@ -5,7 +5,8 @@ dependencies:
     - sudo apt-add-repository -y ppa:ansible/ansible
     - sudo apt-get update -qq
     - sudo apt-get install -qq ansible
-    - echo $ANSIBLE_VAULT_KEY | ansible-vault decrypt vars/sumo-config.yml
+    - echo $ANSIBLE_VAULT_KEY > ansible.key
+    - ansible-vault decrypt --vault-password-file=ansible.key vars/sumo-config.yml
   override:
     - wget https://dl.bintray.com/mitchellh/packer/packer_0.7.5_linux_amd64.zip -O ~/packer.zip
     - mkdir ~/packer && unzip ~/packer.zip -d ~/packer
